@@ -3,7 +3,8 @@ class Ssldump < Formula
   homepage "https://github.com/mathewmarcus/ssldump/tree/dh_aes_gcm_support"
   head "https://github.com/mathewmarcus/ssldump.git", :branch => "dh_aes_gcm_support"
 
-  depends_on "openssl"
+  depends_on "libpcap" => :build
+  depends_on "openssl" => :build
 
   patch :DATA
 
@@ -19,7 +20,9 @@ class Ssldump < Formula
                            "ac_openssl_lib_dir=\"/usr/lib /usr/local /usr/local/ssl /usr/local/ssl/lib /usr/pkg\""
 
     system "./configure", "--prefix=#{prefix}",
-                          "--mandir=#{man}"
+                          "--mandir=#{man}",
+                          "--with-pcap=#{Formula["libpcap"].opt_prefix}",
+                          "--with-openssl=#{Formula["openssl"].opt_prefix}"
     system "make"
     # force install as make got confused by install target and INSTALL file.
     system "make", "install", "-B"
